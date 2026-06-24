@@ -44,15 +44,17 @@ compute:
 # AI tools declaration (honest disclosure per section 10.4)
 # ============================================================================
 ai_tools_used:
-  - "Cursor"
   - "Claude"
+  - "ChatGPT"
+  - "Gemini"
+  - "Antigravity (Agentic IDE)"
 
 ai_usage_summary: |
-  We used Cursor IDE with Claude for code scaffolding and debugging
-  during development. The core scoring weights, honeypot detection
-  heuristics, and DNA Fingerprint design were developed by hand
-  through iterative analysis of the candidate dataset. All ranking
-  runs locally — zero candidate data leaves the machine.
+  The core architecture, system design, scoring methodology, honeypot rules,
+  and features (DNA Fingerprints, Trust Scores) are entirely original user
+  concepts developed by the team. We utilized Claude, ChatGPT, Gemini, and
+  the Antigravity Agentic IDE for code implementation, refactoring, and
+  syntax formatting assistance. All ranking execution is local and CPU-only.
 
 # ============================================================================
 # Approach summary (under 200 words)
