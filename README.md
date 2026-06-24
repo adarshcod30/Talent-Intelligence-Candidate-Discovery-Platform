@@ -1,16 +1,57 @@
-# EnSoc Talent Intelligence Candidate Discovery Platform
+<div align="center">
+  <h1>⚡ EnSoc Talent Intelligence</h1>
+  <p><b>Intelligent Candidate Discovery, Verification & Multi-Dimensional Ranking</b></p>
+  <p><i>A production-grade CPU-only pipeline that processes 100,000 candidates in under 18 seconds, filters out 100% of candidate honeypots, and generates factual recruiter justifications.</i></p>
 
-Welcome to the official repository for **Team EnSoc's** submission for the **Redrob AI Hackathon Data & AI Challenge: Intelligent Candidate Discovery**.
+  <br />
+  <a href="https://ensoc-redrob.streamlit.app">
+    <img src="https://img.shields.io/badge/SANDBOX_DEMO-VIEW_DASHBOARD-5E60FF?style=for-the-badge&logo=streamlit" alt="Live Demo" />
+  </a>
+  <p><b>🚀 Deployed Sandbox:</b> <a href="https://ensoc-redrob.streamlit.app">ensoc-redrob.streamlit.app</a></p>
+  <br />
 
-This project implements a production-grade, high-performance candidate ranking engine tailored for the **Senior AI Engineer — Founding Team** role at **Redrob AI**. Built under strict operational constraints (CPU-only, local-first execution, zero network calls during ranking, and strict runtime limits), the EnSoc platform parses, validates, and ranks **100,000 candidate profiles in under 18 seconds**. It successfully identifies and filters out **100% of candidate honeypots** to deliver a highly verified, top-100 ranked shortlist with factual, rank-consistent justifications.
+  [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+  [![Streamlit](https://img.shields.io/badge/Streamlit-1.30-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+  [![Plotly](https://img.shields.io/badge/Plotly-5.18-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)](https://plotly.com/)
+  [![UTF-8](https://img.shields.io/badge/Encoding-UTF--8-lightgrey?style=for-the-badge)](#)
+</div>
 
 ---
 
-## 1. System Design & Architectural Overview
+## Table of Contents
 
-The platform is designed around a two-phase architecture: **Deterministic Screening** followed by **Multi-Dimensional Heuristic Scoring**. Traditional semantic search models (such as vector embeddings) frequently fail in recruiting environments because they only capture keyword association; they cannot identify logical contradictions or chronologically impossible experience claims. To address this, the EnSoc pipeline intercepts incoming candidate records with a hard filter before scoring, protecting the final shortlist from profile inflation and fraud.
+- [The Recruitment Challenge — Why EnSoc Exists](#the-recruitment-challenge--why-ensoc-exists)
+- [System Architecture & Data Flow](#system-architecture--data-flow)
+- [Phase 1: Deterministic Honeypot Filter (The Security Shield)](#phase-1-deterministic-honeypot-filter-the-security-shield)
+- [Phase 2: Multi-Dimensional Scoring Engine](#phase-2-multi-dimensional-scoring-engine)
+- [Phase 3: Signature Platform Features](#phase-3-signature-platform-features)
+  - [Candidate DNA Fingerprints](#candidate-dna-fingerprints)
+  - [Recruiter Trust Scores](#recruiter-trust-scores)
+- [Phase 4: Natural Explainability Engine](#phase-4-natural-explainability-engine)
+- [Interactive Sandbox Dashboard Guide](#interactive-sandbox-dashboard-guide)
+- [Setup & One-Command Reproduction](#setup--one-command-reproduction)
+- [Originality & AI Tooling Disclosure](#originality--ai-tooling-disclosure)
+- [Team Details & Contributions](#team-details--contributions)
 
-### Pipeline Architecture Flow
+---
+
+## The Recruitment Challenge — Why EnSoc Exists
+
+Finding founding-team engineering talent is one of the highest-stakes tasks in technology recruiting. A traditional candidate discovery platform typically relies on naive keyword searches or semantic vector embeddings (like BERT). However, these systems suffer from three core operational flaws:
+
+1.  **Keyword-Stuffing Vulnerabilities**: Candidates frequently list high-value buzzwords (e.g. *LangChain*, *RAG*, *vector databases*) in their summaries or skills list without possessing actual practical experience. A pure semantic vector search cannot verify if these skills have corresponding career duration or professional history.
+2.  **Fake Profiles & Heuristic Honeypots**: Resumes and candidate profiles are often generated or exaggerated using logical contradictions—such as claiming 8 years of experience in a technology released only 2 years ago, or claiming to work at a company before its founding year. 
+3.  **Compute & Scaling Bottleneck**: While Large Language Models (LLMs) provide high contextual reasoning, invoking an LLM API to evaluate and rank a candidate pool of **100,000+ profiles** is operationally impossible. It introduces massive network latency, breaks execution budgets, and violates cost constraints.
+
+**The EnSoc Solution** solves these issues through a decoupled local pipeline. It intercepts candidate records with a **Deterministic Honeypot Filter** to exclude 100% of invalid profiles, evaluates genuine candidates across **four key suitability dimensions**, and scales scores using **behavioral platform engagement multipliers**. The entire processing pipeline runs locally in under **18 seconds on a single CPU core** with zero network calls.
+
+---
+
+## System Architecture & Data Flow
+
+The EnSoc platform decouples data processing, validation, scoring, and UI visualization. The raw candidate pool flows through distinct sequential stages, transitioning candidate state records from raw ingestion to the final validated shortlist.
+
+### Pipeline System Architecture
 
 ```mermaid
 graph TD
@@ -56,23 +97,23 @@ stateDiagram-v2
 
 ---
 
-## 2. Deterministic Honeypot Filter
+## Phase 1: Deterministic Honeypot Filter (The Security Shield)
 
-The module `pipeline/filter.py` applies **7 deterministic logical checks** to screen out artificial profiles (honeypots). Profiles that fail *any* check are assigned a final score of `0.0` and are completely excluded from the ranked list:
+The module `pipeline/filter.py` applies **7 deterministic logical checks** to screen out artificial profiles (honeypots). If a profile fails any check, it receives a score of `0.0` and is completely excluded from the top-100 shortlist:
 
-1. **Recent Technology Age Check**: LangChain, LlamaIndex, QLoRA, LoRA, PEFT, ChatGPT, and RAG only entered widespread use after **2022**. If a profile claims $>5$ years ($>60$ months) of experience in any of these skills, it is flagged as chronologically impossible.
-2. **Expert Skills vs. Duration Check**: If a candidate claims "expert" or "advanced" proficiency in 3 or more skills but lists a duration of `0` months for all of them, or lists expert/advanced skills but has an entirely empty career history, the profile is flagged.
-3. **Experience Mismatch Check**: Cross-references the candidate's self-reported "years of experience" (YOE) attribute against their actual career history. If the profile claims $\ge 10$ YOE, but the sum of durations in their career history is less than 1.5 years, it represents a logical contradiction.
-4. **Job Date Order Anomalies**: Inspects every job entry. If the `start_date` is chronologically after the `end_date`, the entry is flagged as invalid.
-5. **Education Date Order Anomalies**: Checks all education entries. If the `start_year` is greater than the `end_year` (graduating before starting), the entry is flagged.
-6. **Company Founding Date Trap**: Text-parses the descriptions of employers in the candidate's history to extract the founding year (e.g. *"founded in 2022"*, *"established in 2020"*). If the candidate's job start date at that company is prior to its founding year, the profile is flagged.
-7. **Concurrent Job Check**: Identifies candidates listing multiple concurrent full-time jobs (`is_current: true`) at different companies, signaling potential moonlighting violations or merged synthetic resumes.
+1.  **Recent Technology Age Check**: LangChain, LlamaIndex, QLoRA, LoRA, PEFT, ChatGPT, and RAG only entered widespread use after **2022**. If a candidate claims more than 5 years (60 months) of experience in any of these skills, the profile is flagged.
+2.  **Expert Skills vs. Duration Check**: If a candidate claims "expert" or "advanced" proficiency in 3 or more skills but has a duration of `0` months for all of them, or lists expert/advanced skills but has an entirely empty career history, the profile is flagged.
+3.  **Experience Mismatch Check**: Cross-references the candidate's self-reported "years of experience" (YOE) attribute against their actual career history. If the profile claims $\ge 10$ YOE, but the sum of durations in their career history is less than 1.5 years, it is flagged.
+4.  **Job Date Order Anomalies**: If a candidate's job entry lists a `start_date` that is chronologically after the `end_date`, the entry is flagged as invalid.
+5.  **Education Date Order Anomalies**: Checks all education entries. If the `start_year` is greater than the `end_year` (graduating before starting), the entry is flagged.
+6.  **Company Founding Date Trap**: Text-parses the descriptions of employers in the candidate's history to extract the founding year (e.g. *"founded in 2022"*, *"established in 2020"*). If the candidate's job start date at that company is prior to its founding year, the profile is flagged.
+7.  **Concurrent Job Check**: Identifies candidates listing multiple concurrent full-time jobs (`is_current: true`) at different companies, signaling potential moonlighting violations or merged synthetic resumes.
 
 ---
 
-## 3. Multi-Dimensional Scoring Engine
+## 2. Multi-Dimensional Scoring Engine
 
-Valid candidates are scored out of 1.0 (with verification bonuses possible) across four key dimensions, scaled by a behavioral multiplier:
+Valid candidates are evaluated out of 1.0 (with verification bonuses possible) across four key dimensions, scaled by a behavioral multiplier:
 
 $$S = \left( 0.30 \cdot S_{\text{role}} + 0.30 \cdot S_{\text{skills}} + 0.20 \cdot S_{\text{experience}} + 0.20 \cdot S_{\text{logistics}} \right) \times M_{\text{behavior}}$$
 
@@ -86,7 +127,7 @@ $$S = \left( 0.30 \cdot S_{\text{role}} + 0.30 \cdot S_{\text{skills}} + 0.20 \c
 
 ---
 
-## 4. Signature Platform Features
+## 3. Signature Platform Features
 
 ### Candidate DNA Fingerprints
 Visualizes candidates across 6 core competency axes in an interactive Plotly radar chart:
@@ -110,7 +151,7 @@ $$\text{Trust} = 0.3 \cdot \text{Completeness} + 0.5 \cdot \text{Verification} +
 
 ---
 
-## 5. Natural Explainability Engine
+## 4. Natural Explainability Engine
 
 To satisfy manual review requirements, `pipeline/reasoner.py` generates natural, fact-based justifications based on profile parameters, containing zero hallucinations:
 - **Sample Reasoning (Rank 1)**:
@@ -120,7 +161,7 @@ To satisfy manual review requirements, `pipeline/reasoner.py` generates natural,
 
 ---
 
-## 6. Streamlit Sandbox Dashboard Guide
+## 5. Streamlit Sandbox Dashboard Guide
 
 Our Streamlit workspace (`app.py`) provides:
 1. **Ranked Shortlist**: Displays the top 100 candidates with interactive DNA radar profiles and Recruiter Trust Score gauges. Includes a download button for `team_ensoc.csv` (encoded in UTF-8).
@@ -134,7 +175,7 @@ Our Streamlit workspace (`app.py`) provides:
 
 ---
 
-## 7. Setup & Reproduction Guide
+## 6. Setup & Reproduction Guide
 
 ### Installation
 Install dependencies locally:
@@ -157,14 +198,14 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-## 8. AI Tools & Human Effort Declaration
+## 7. Originality & AI Tooling Disclosure
 
 - **Development Concept & Originality**: The core architecture, pipeline workflow, scoring methodology, honeypot detection rules, DNA Fingerprint representation, and Recruiter Trust Score are **100% original concepts developed by the user team (Pratham Agarwal & Adarsh Dwivedi)**.
 - **AI Tooling Assistance**: We utilized Claude, ChatGPT, Gemini models, and the Antigravity Agentic IDE to assist in code implementation, syntax refactoring, dashboard UI styling, and documentation formatting. All execution remains entirely local, private, and CPU-only.
 
 ---
 
-## 9. Team Details & Contributions
+## 8. Team Details & Contributions
 
 We are **Team EnSoc** (LNMIIT, Jaipur):
 
