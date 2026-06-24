@@ -710,8 +710,10 @@ else:
                             template="plotly_dark",
                             paper_bgcolor="rgba(0,0,0,0)",
                             plot_bgcolor="rgba(0,0,0,0)",
-                            font=dict(color="#f1f3f9")
+                            font=dict(color="#f1f3f9"),
+                            bargap=0.08
                         )
+                        fig_yoe.update_traces(marker_line_width=1.5, marker_line_color='#0d0e15')
                         st.plotly_chart(fig_yoe, use_container_width=True)
                         st.write(
                             "This chart shows the distribution of professional tenure. Pointing out the density of profiles "
@@ -758,8 +760,10 @@ else:
                             template="plotly_dark",
                             paper_bgcolor="rgba(0,0,0,0)",
                             plot_bgcolor="rgba(0,0,0,0)",
-                            font=dict(color="#f1f3f9")
+                            font=dict(color="#f1f3f9"),
+                            bargap=0.15
                         )
+                        fig_loc.update_traces(marker_line_width=1.5, marker_line_color='#0d0e15')
                         st.plotly_chart(fig_loc, use_container_width=True)
                         st.write(
                             "This bar chart displays the geographic distribution of talent. A high concentration of candidates "
@@ -801,8 +805,10 @@ else:
                         template="plotly_dark",
                         paper_bgcolor="rgba(0,0,0,0)",
                         plot_bgcolor="rgba(0,0,0,0)",
-                        font=dict(color="#f1f3f9")
+                        font=dict(color="#f1f3f9"),
+                        bargap=0.08
                     )
+                    fig_trust.update_traces(marker_line_width=1.5, marker_line_color='#0d0e15')
                     st.plotly_chart(fig_trust, use_container_width=True)
                     st.write(
                         "This histogram displays the distribution of profile trust scores. High trust scores (>80%) indicate "
