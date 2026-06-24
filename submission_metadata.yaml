@@ -1,0 +1,83 @@
+# Redrob Hackathon — Submission Metadata
+# Team EnSoc | Intelligent Candidate Discovery & Ranking
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "EnSoc"
+
+primary_contact:
+  name: "Pratham Agarwal"
+  email: "prathamagarwal189@gmail.com"
+  phone: "+91-9948907747"
+
+team_members:
+  - name: "Pratham Agarwal"
+    email: "prathamagarwal189@gmail.com"
+    role: "Team Lead — Architecture & Scoring Logic"
+  - name: "Adarsh Dwivedi"
+    email: "23ucs509@lnmiit.ac.in"
+    role: "Pipeline Engineering & Streamlit Dashboard"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/ensoc-team/redrob-candidate-ranker"  # update with actual URL
+sandbox_link: "https://ensoc-redrob.streamlit.app"  # update after deployment
+reproduce_command: "python3 rank.py --candidates ./India_runs_data_and_ai_challenge/candidates.jsonl --out ./team_ensoc.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "MacBook Pro M2"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11"
+  os: "macOS 14"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+# ============================================================================
+# AI tools declaration (honest disclosure per section 10.4)
+# ============================================================================
+ai_tools_used:
+  - "Cursor"
+  - "Claude"
+
+ai_usage_summary: |
+  We used Cursor IDE with Claude for code scaffolding and debugging
+  during development. The core scoring weights, honeypot detection
+  heuristics, and DNA Fingerprint design were developed by hand
+  through iterative analysis of the candidate dataset. All ranking
+  runs locally — zero candidate data leaves the machine.
+
+# ============================================================================
+# Approach summary (under 200 words)
+# ============================================================================
+methodology_summary: |
+  A lightweight multi-dimensional scoring engine that ranks 100K
+  candidates in under 15 seconds on CPU. The pipeline has four stages:
+  (1) deterministic honeypot detection using 7 contradiction checks
+  (date anomalies, impossible skill durations, YOE mismatches);
+  (2) weighted scoring across role/title fit, technical skill depth,
+  experience trajectory, and logistics/availability;
+  (3) a behavioral modifier that adjusts scores based on platform
+  engagement signals (recency, response rate, interview completion);
+  (4) a novel Candidate DNA Fingerprint and Recruiter Trust Score
+  that visualizes candidate strengths across 6 axes and quantifies
+  profile verification confidence. Reasonings are generated from
+  verified profile facts with rank-consistent tone. No LLM APIs
+  are called during ranking.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
