@@ -22,7 +22,7 @@ team_members:
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "https://github.com/ensoc-team/redrob-candidate-ranker"  # update with actual URL
+github_repo: "https://github.com/adarshcod30/Talent-Intelligence-Candidate-Discovery-Platform"
 sandbox_link: "https://ensoc-redrob.streamlit.app"  # update after deployment
 reproduce_command: "python3 rank.py --candidates ./India_runs_data_and_ai_challenge/candidates.jsonl --out ./team_ensoc.csv"
 
