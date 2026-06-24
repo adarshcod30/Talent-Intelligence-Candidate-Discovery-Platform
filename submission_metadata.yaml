@@ -30,11 +30,11 @@ reproduce_command: "python3 rank.py --candidates ./India_runs_data_and_ai_challe
 # Compute environment
 # ============================================================================
 compute:
-  platform: "MacBook Pro M2"
+  platform: "MacBook Air M4"
   cpu_cores: 8
   ram_gb: 16
   python_version: "3.11"
-  os: "macOS 14"
+  os: "macOS 26"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: false
