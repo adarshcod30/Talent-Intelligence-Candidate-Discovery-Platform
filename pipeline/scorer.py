@@ -361,7 +361,7 @@ def calculate_candidate_score(candidate):
     behavior_mult = compute_behavior_multiplier(signals)
     
     # Final score
-    final_score = base_score * behavior_mult
+    final_score = min(base_score * behavior_mult, 1.0)
     
     # DNA Fingerprint & Trust Score (The groundbreaker features!)
     dna = compute_dna_fingerprint(candidate, title_score, skills_score, exp_score, logistics_score)
