@@ -1,0 +1,23 @@
+# Datasets
+*.jsonl
+India_runs_data_and_ai_challenge/candidates.jsonl
+
+# Python temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Streamlit temporary files
+.streamlit/
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
