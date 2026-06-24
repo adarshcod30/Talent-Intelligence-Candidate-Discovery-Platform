@@ -226,7 +226,7 @@ Our Streamlit workspace (`app.py`) provides:
 ## 8. Setup & One-Command Reproduction
 
 ### Prerequisites
-Install dependencies locally (ReportLab is auto-installed by the deck generator if missing):
+Install dependencies locally:
 ```bash
 pip install -r requirements.txt
 ```
