@@ -21,10 +21,3 @@ __pycache__/
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# local agent and editor files, never committed
-.claude/
-.claude.json
-CLAUDE.local.md
-CLAUDE.md
-AGENTS.md
